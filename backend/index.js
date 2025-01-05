@@ -1,9 +1,17 @@
 const express = require("express");
 require("dotenv").config(); // Load environment variables
 const mongoose = require("mongoose");
-
-
+const cors=require('cors')
 const app = express();
+
+app.use(cors())
+const corsOptions = {
+    origin: '*',
+    credentials: true,
+  };
+  
+  app.use(cors(corsOptions));
+
 const port=process.env.PORT;
 async function main()
 {
