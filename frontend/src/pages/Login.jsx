@@ -1,74 +1,136 @@
-import { Link, useNavigate } from "react-router-dom"
-import Footer from "../components/Footer"
-import { useContext, useState } from "react"
-import axios from "axios"
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { URL } from "../url"
-import { UserContext } from "../context/UserContext"
-
 
 const Login = () => {
-  const [email,setEmail]=useState("")
-  const [password,setPassword]=useState("")
-  const [error,setError]=useState(false)
-  const {setUser}=useContext(UserContext)
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [error, setError] = useState(false); // For showing error messages
 
-  const handleLogin=async()=>{
-    try{
-      // const res=await axios.post(URL+"/api/auth/login",{email,password},{withCredentials:true})
-      const res= await fetch("/api/auth/login",{
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.email) newErrors.email = "Email is required";
+    if (!formData.password) newErrors.password = "Password is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent form from submitting without validation
+    if (!validateForm()) return;
+
+    try {
+      const res = await fetch("http://localhost:8000/api/auth/login", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include',
-        body: JSON.stringify({ email: email, password: password })
-      })
-      // console.log(res.data)
+        credentials: 'include', // This sends cookies along with the request
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+      
+      
+
       if (res.ok) {
         const data = await res.json(); // Extract JSON data
-        const cookies = res.headers.get('Set-Cookie');
-        console.warn('Data:', data);
-        console.warn('Cookies:', cookies);
-        
-        setUser(data)
+        console.warn("Data:", data);
+        // You can set user here if you have a context or a state to store user data
+        navigate("/home"); // Redirect after successful login
       } else {
-        console.error('Request failed with status:', res.status);
+        console.error("Request failed with status:", res.status);
+        setError(true); // Show error if login failed
       }
-     
-      navigate("/")
-
+    } catch (err) {
+      console.log("Error during login:", err);
+      setError(true); // Show error if an exception occurs
     }
-    catch(err){
-      setError(true)
-      console.log(err)
+  };
 
-    }
+  const isFormValid = formData.email && formData.password;
 
-  }
   return (
-    <>
-    <div className="flex items-center justify-between px-6 md:px-[200px] py-4">
-    <h1 className="text-lg md:text-xl font-extrabold"><Link to="/">Blog Market</Link></h1>
-    <h3><Link to="/register">Register</Link></h3>
+    <div className="flex flex-col min-h-screen bg-gray-200">
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-full max-w-lg p-8 space-y-6 bg-white rounded-2xl shadow-md">
+          <h1 className="text-3xl font-semibold text-center text-black">Sign In</h1>
+          <p className="text-center text-gray-900">
+            Enter your email and password to access your account
+          </p>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label htmlFor="email" className="block text-md font-medium text-gray-900">
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                className={`mt-1 block w-full h-12 px-4 z-10 rounded-md border-2 border-gray-900 bg-white text-black shadow-sm focus:border-black focus:ring-black ${
+                  errors.email ? "border-red-500" : ""
+                }`}
+              />
+              {errors.email && (
+                <p className="mt-2 text-md text-red-600">{errors.email}</p>
+              )}
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-md font-medium text-gray-900">
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                className={`mt-1 block w-full h-12 px-4 rounded-md border-2 border-gray-300 bg-white text-black shadow-sm focus:border-black focus:ring-black ${
+                  errors.password ? "border-red-500" : ""
+                }`}
+              />
+              {errors.password && (
+                <p className="mt-2 text-sm text-red-600">{errors.password}</p>
+              )}
+            </div>
+            <button
+              type="submit"
+              disabled={!isFormValid}
+              className={`w-full py-3 rounded-md text-white font-semibold ${
+                isFormValid ? "bg-black hover:bg-gray-800" : "bg-gray-300 cursor-not-allowed"
+              }`}
+            >
+              Sign In
+            </button>
+            {error && <p className="text-red-500 text-center">Invalid credentials, please try again.</p>}
+          </form>
+          <div className="text-center">
+            <p>
+              Don't have an account yet?{" "}
+              <button
+                onClick={() => navigate("/register")}
+                className="text-black underline"
+              >
+                Sign Up
+              </button>
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
-<div className="w-full flex justify-center items-center h-[80vh] ">
-       <div className="flex flex-col justify-center items-center space-y-4 w-[80%] md:w-[25%]">
-         <h1 className="text-xl font-bold text-left">Log in to your account</h1>
-         <input onChange={(e)=>setEmail(e.target.value)} className="w-full px-4 py-2 border-2 border-black outline-0" type="text" placeholder="Enter your email" />
-         <input onChange={(e)=>setPassword(e.target.value)} className="w-full px-4 py-2 border-2 border-black outline-0" type="password" placeholder="Enter your password" />
-         <button onClick={handleLogin} className="w-full px-4 py-4 text-lg font-bold text-white bg-black rounded-lg hover:bg-gray-500 hover:text-black ">Log in</button>
-         {error && <h3 className="text-red-500 text-sm ">Something went wrong</h3>}
-         <div className="flex justify-center items-center space-x-3">
-          <p>New here?</p>
-          <p className="text-gray-500 hover:text-black"><Link to="/register">Register</Link></p>
-         </div>
-       </div>
-    </div>
-    <Footer/>
-    </>
-    
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

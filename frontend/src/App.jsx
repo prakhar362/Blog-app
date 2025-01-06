@@ -8,12 +8,13 @@ import PostDetails from './pages/Postdetails';
 import EditPost from './pages/EditPost';
 import MyBlogs from './pages/Myblogs';
 import Profile from './pages/Profile';
-
+import Landing from './pages/LandingPage';
 function App() {
   return (
     <>
       <Routes>
-        <Route exact path="/" element={<Home />} />
+        <Route exact path="/" element={<Landing />} />
+        <Route exact path="/home" element={<Home />} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/register" element={<Register />} />
         <Route exact path="/write" element={<CreatePost />} />
