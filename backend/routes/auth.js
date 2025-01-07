@@ -25,7 +25,7 @@ router.post('/register', async(req,res)=>{
 }
 )
 
-//login endpoint
+//LOGIN
 router.post("/login",async (req,res)=>{
     try{
         const user=await User.findOne({email:req.body.email})
@@ -38,8 +38,7 @@ router.post("/login",async (req,res)=>{
         if(!match){
             return res.status(401).json("Wrong credentials!")
         }
-        //create jwt token 
-        const token=jwt.sign({_id:user._id,username:user.username,email:user.email},process.env.SECRET,{expiresIn:"1d"})
+        const token=jwt.sign({_id:user._id,username:user.username,email:user.email},process.env.SECRET,{expiresIn:"3d"})
         const {password,...info}=user._doc
         res.cookie("token",token, {
             httpOnly: true,
@@ -52,6 +51,8 @@ router.post("/login",async (req,res)=>{
         res.status(500).json(err)
     } 
 })
+
+
 
 //LOGOUT
 router.get("/logout",async (req,res)=>{

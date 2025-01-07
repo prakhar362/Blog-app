@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { URL } from "../url"; // Assuming the URL export file is at the same level
 
 const Register = () => {
   const navigate = useNavigate();
@@ -8,8 +9,8 @@ const Register = () => {
     email: "",
     password: "",
   });
-
   const [errors, setErrors] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -25,11 +26,31 @@ const Register = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      console.log("Registering with:", formData);
-      // Perform registration logic here
+    if (!validateForm()) return;
+
+    try {
+      const response = await fetch(`${URL}/api/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message || "Registration failed");
+        return;
+      }
+
+      const data = await response.json();
+      console.log("Registration successful:", data);
+      navigate("/login");
+    } catch (err) {
+      console.error("Unexpected error during registration:", err);
+      setErrorMessage("Something went wrong. Please try again later.");
     }
   };
 
@@ -37,16 +58,6 @@ const Register = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-200">
-      <header className="px-4 lg:px-6 h-14 flex items-center border-b">
-        <Link to="/" className="flex items-center justify-center">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/8521/8521795.png"
-            alt="Logo"
-            className="max-h-10 min-w-10"
-          />
-          <span className="font-extrabold text-2xl ml-4 text-black">Blogosphere</span>
-        </Link>
-      </header>
       <div className="flex items-center justify-center min-h-screen">
         <div className="w-full max-w-lg p-8 space-y-6 bg-white rounded-xl shadow-md">
           <h1 className="text-3xl font-semibold text-center text-black">Sign Up</h1>
@@ -117,6 +128,9 @@ const Register = () => {
             >
               Sign Up
             </button>
+            {errorMessage && (
+              <p className="text-center text-red-600 mt-2">{errorMessage}</p>
+            )}
           </form>
           <div className="text-center">
             <p>

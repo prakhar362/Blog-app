@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { URL } from "../url"
+import { URL } from "../url"; // Make sure the path is correct
 
 const Login = () => {
   const navigate = useNavigate();
@@ -9,7 +9,7 @@ const Login = () => {
     password: "",
   });
   const [errors, setErrors] = useState({});
-  const [error, setError] = useState(false); // For showing error messages
+  const [error, setError] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -25,36 +25,34 @@ const Login = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent form from submitting without validation
+    e.preventDefault();
     if (!validateForm()) return;
 
     try {
-      const res = await fetch("http://localhost:8000/api/auth/login", {
-        method: 'POST',
+      const response = await fetch(`${URL}/api/auth/login`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include', // This sends cookies along with the request
         body: JSON.stringify({
           email: formData.email,
           password: formData.password,
         }),
       });
-      
-      
 
-      if (res.ok) {
-        const data = await res.json(); // Extract JSON data
-        console.warn("Data:", data);
-        // You can set user here if you have a context or a state to store user data
-        navigate("/home"); // Redirect after successful login
-      } else {
-        console.error("Request failed with status:", res.status);
-        setError(true); // Show error if login failed
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error:", errorData.message || "Login failed");
+        setError(true);
+        return;
       }
+
+      const data = await response.json();
+      console.log("Login successful:", data);
+      navigate("/home");
     } catch (err) {
-      console.log("Error during login:", err);
-      setError(true); // Show error if an exception occurs
+      console.error("Unexpected error during login:", err);
+      setError(true);
     }
   };
 
@@ -114,7 +112,11 @@ const Login = () => {
             >
               Sign In
             </button>
-            {error && <p className="text-red-500 text-center">Invalid credentials, please try again.</p>}
+            {error && (
+              <p className="text-red-500 text-center">
+                Invalid credentials, please try again.
+              </p>
+            )}
           </form>
           <div className="text-center">
             <p>
