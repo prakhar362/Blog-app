@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";  // Import UserContext
 import { URL } from "../url"; // Make sure the path is correct
 
 const Login = () => {
   const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);  // Access setUser function from context
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -49,13 +52,17 @@ const Login = () => {
 
       const data = await response.json();
       console.log("Login successful:", data);
+
+      // Set the user data in the context after successful login
+      setUser(data);  // Now this should work
+
+      // Redirect to home page
       navigate("/home");
     } catch (err) {
       console.error("Unexpected error during login:", err);
       setError(true);
     }
   };
-
   const isFormValid = formData.email && formData.password;
 
   return (

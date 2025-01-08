@@ -9,12 +9,26 @@ import EditPost from './pages/EditPost';
 import MyBlogs from './pages/Myblogs';
 import Profile from './pages/Profile';
 import Landing from './pages/LandingPage';
+import ProtectRoute from "./components/ProtectRoute"; // Import the ProtectRoute component
+import { UserContextProvider } from './context/UserContext';  // Import UserContextProvider
+
 function App() {
   return (
     <>
+    <UserContextProvider>  {/* Wrap with UserContextProvider */}
       <Routes>
         <Route exact path="/" element={<Landing />} />
-        <Route exact path="/home" element={<Home />} />
+        
+        {/* Protected Route */}
+        <Route
+          path="/home"
+          element={
+            <ProtectRoute>
+              <Home />
+            </ProtectRoute>
+          }
+        />
+        
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/register" element={<Register />} />
         <Route exact path="/write" element={<CreatePost />} />
@@ -23,6 +37,7 @@ function App() {
         <Route exact path="/myblogs/:id" element={<MyBlogs />} />
         <Route exact path="/profile/:id" element={<Profile />} />
       </Routes>
+      </UserContextProvider>
     </>
   );
 }
