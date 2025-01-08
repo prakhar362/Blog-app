@@ -14,6 +14,7 @@ const Navbar = () => {
 
   const { user, setUser } = useContext(UserContext); // Access user and setUser from UserContext
 
+
   // Toggle dropdown menu
   const toggleDropdown = () => {
     setDropdown((prev) => !prev);
@@ -101,7 +102,7 @@ const Navbar = () => {
         <ul className="flex flex-col">
           <li>
             <Link
-              to="/profile"
+              to={`/profile/${user._id}`}
               className="block px-4 py-2 hover:bg-gray-100"
             >
               MyProfile
