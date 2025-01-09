@@ -28,6 +28,8 @@ const PostSchema=new mongoose.Schema({
         type:Array,
         
     },
+    likes: { type: Number, default: 0 }, // Add likes
+    comments: { type: Array, default: [] }, // Add comments as an array of strings or objects
 },{timestamps:true})
 
 module.exports=mongoose.model("Post",PostSchema)
