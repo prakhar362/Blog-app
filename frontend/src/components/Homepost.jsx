@@ -80,7 +80,7 @@ const HomePost = ({ selectedCategories }) => {
               <img
                 src={blog.photo}
                 alt={blog.title}
-                className="w-64 h-36 object-cover rounded-sm -ml-44"
+                className="w-64 sm:w-64 md:w-44 mt-4 h-44 ml-3 lg:h-44 object-cover rounded-sm mb-4 sm:mb-0"
               />
             )}
 
