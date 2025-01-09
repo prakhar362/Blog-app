@@ -5,7 +5,10 @@ import { FaUserCircle } from "react-icons/fa";
 import { useContext, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { URL } from "../url"; // Make sure the URL is imported correctly
-
+import { IoIosLogOut } from "react-icons/io";
+import { IoBookmarks } from "react-icons/io5";
+import { LiaBlogSolid } from "react-icons/lia";
+import { CgProfile } from "react-icons/cg";
 const Navbar = () => {
   const [prompt, setPrompt] = useState("");
   const [dropdown, setDropdown] = useState(false);
@@ -103,33 +106,34 @@ const Navbar = () => {
           <li>
             <Link
               to={`/profile/${user._id}`}
-              className="block px-4 py-2 hover:bg-gray-100"
-            >
+              className="flex px-4 py-2 hover:bg-gray-100"
+            ><CgProfile className="w-6 h-6 mr-2" />
               MyProfile
             </Link>
           </li>
           <li>
             <Link
               to="/library"
-              className="block px-4 py-2 hover:bg-gray-100"
+              className="flex px-4 py-2 hover:bg-gray-100 text-base"
             >
-              Library
+              <IoBookmarks className="w-5 h-5 mr-3" /> Library
             </Link>
           </li>
           <li>
             <Link
               to="/myblogs"
-              className="block px-4 py-2 hover:bg-gray-100"
+              className="flex px-4 py-2 hover:bg-gray-100"
             >
+              <LiaBlogSolid className="w-6 h-6 mr-2" />
               MyBlogs
             </Link>
           </li>
           <li>
             <button
               onClick={handleLogout}
-              className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+              className="flex w-full text-left px-4 py-2 hover:bg-gray-100"
             >
-              Logout
+            <IoIosLogOut className="w-6 h-6 mr-3" /> Logout
             </button>
           </li>
         </ul>
