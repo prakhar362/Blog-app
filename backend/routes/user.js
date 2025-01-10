@@ -8,7 +8,7 @@ const verifyToken = require('../verifyToken')
 
 
 //UPDATE
-router.put("/:id", verifyToken, async (req, res) => {
+router.put("/:id", async (req, res) => {
     try {
       if (req.body.password) {
         const salt = await bcrypt.genSalt(10);
