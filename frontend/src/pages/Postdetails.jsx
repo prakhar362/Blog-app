@@ -5,6 +5,8 @@ import { AiOutlineComment } from "react-icons/ai";
 import { URL } from "../url"; // Backend base URL
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
+import { FaUserAlt } from 'react-icons/fa'; // Import the user icon
+
 const PostDetails = () => {
   const { id } = useParams(); // Post ID from the route
   const [post, setPost] = useState(null);
@@ -13,19 +15,13 @@ const PostDetails = () => {
   const [newComment, setNewComment] = useState("");
   const [liked, setLiked] = useState(false);
 
-
-   // Fetch user info from localStorage
-   useEffect(() => {
-    const userDataString = localStorage.getItem("userCredentials"); 
-if (userDataString) {
-    const userData = JSON.parse(userDataString);
-    console.log("We received the user cred from local: ",userData);
-    const parsedUserData = JSON.parse(userDataString);
-        setUserData(parsedUserData); // Store user data in state
-        console.log("We have passed the user cred: ", parsedUserData);
-} else {
-    console.log("No user data found in localStorage.");
-}
+  // Fetch user info from localStorage
+  useEffect(() => {
+    const userDataString = localStorage.getItem("userCredentials");
+    if (userDataString) {
+      const parsedUserData = JSON.parse(userDataString);
+      setUserData(parsedUserData); // Store user data in state
+    }
   }, [setUserData]);
 
   // Fetch post details
@@ -43,128 +39,165 @@ if (userDataString) {
   }, [id]);
 
   // Fetch comments for the post
-useEffect(() => {
-  const fetchComments = async () => {
-    try {
-      const response = await fetch(`${URL}/api/comments/post/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${userData.token}`, // Send the token for authentication
-        },
-      });
-      const data = await response.json();
-      setComments(data); // Update state with fetched comments
-    } catch (err) {
-      console.error("Failed to fetch comments", err);
-    }
-  };
-
-  fetchComments();
-}, [id]);
-
-
+  useEffect(() => {
+    const fetchComments = async () => {
+      if (userData) {
+        try {
+          const response = await fetch(`${URL}/api/comments/post/${id}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${userData.token}`, // Send the token for authentication
+            },
+          });
+          const data = await response.json();
+          setComments(data); // Update state with fetched comments
+        } catch (err) {
+          console.error("Failed to fetch comments", err);
+        }
+      }
+    };
+    fetchComments();
+  }, [id, userData]);
 
   // Handle new comment submission
-const handleCommentSubmit = async (e) => {
-  e.preventDefault();
-   // Retrieve the stored user credentials
-   const userDataString = localStorage.getItem("userCredentials");
-   const userData = JSON.parse(userDataString);
-  try {
-    const response = await fetch(`${URL}/api/comments/create`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${userData.token}`, // Send the token for authentication
-      },
-      body: JSON.stringify({
-        comment: newComment,
-        author: userData.username,
-        postId: id,
-        userId: userData._id,
-      }),
-    });
-    const data = await response.json();
-    setComments([...comments, data]); // Update comments
-    setNewComment(""); // Clear input field
-  } catch (err) {
-    console.error("Failed to add comment", err);
-  }
-};
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+    if (!newComment.trim()) return; // Don't submit empty comments
+    const userDataString = localStorage.getItem("userCredentials");
+    const parsedUserData = JSON.parse(userDataString);
+    try {
+      const response = await fetch(`${URL}/api/comments/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${parsedUserData.token}`, // Send the token for authentication
+        },
+        body: JSON.stringify({
+          comment: newComment,
+          author: parsedUserData.username,
+          postId: id,
+          userId: parsedUserData._id,
+        }),
+      });
+      const data = await response.json();
+      setComments([...comments, data]); // Update comments
+      setNewComment(""); // Clear input field
+    } catch (err) {
+      console.error("Failed to add comment", err);
+    }
+  };
 
   // Toggle like
   const toggleLike = () => {
     setLiked((prevLiked) => !prevLiked);
   };
+
+  const getRandomColor = () => {
+    const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A6', '#33A6FF', '#A633FF'];
+    const randomIndex = Math.floor(Math.random() * colors.length);
+    return colors[randomIndex];
+  };
+
+  
   if (!post) return <div>Loading...</div>;
+
   return (
     <div>
-      <Navbar/>
-    <div className="container mx-auto p-4">
-      
-      {/* Post Details */}
-      <div className="post-details mb-8">
-        <img
-          src={post.photo}
-          
-          className="w-3/4 h-96 object-cover rounded-sm mb-4 mx-36"
-        />
-        <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
-        <div className="text-gray-500 mb-4">
-          By <span className="font-semibold">{post.author}</span> | Categories:{" "}
-          {post.categories.join(", ")}
-        </div>
-        <p className="text-lg mb-6">{post.desc}</p>
-        {/* Like and Comment Buttons */}
-        <div className="flex items-center space-x-6">
-          <button
-            className="flex items-center text-gray-600 hover:text-red-500"
-            onClick={toggleLike}
-          >
-            {liked ? <BsHeartFill className="mr-2 text-red-500" /> : <BsHeart className="mr-2" />}
-            {liked ? "Liked" : "Like"}
-          </button>
-          <span className="flex items-center text-gray-900">
-            <AiOutlineComment className="mr-2" />
-            {comments.length} Comments
-          </span>
-        </div>
-      </div>
-      {/* Comments Section */}
-      <div className="comments">
-        <h2 className="text-2xl font-bold mb-4">Comments</h2>
-        {/* Comments List */}
-        {comments.length > 0 ? (
-          comments.map((comment) => (
-            <div key={comment._id} className="mb-4">
-              <p className="bg-gray-100 p-4 rounded-md">{comment.author}</p>
-              <p className="bg-gray-100 p-4 rounded-md">{comment.comment}</p>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500">No comments yet. Be the first to comment!</p>
-        )}
-        {/* Add Comment */}
-        <form onSubmit={handleCommentSubmit} className="mt-6">
-          <textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Write a comment..."
-            className="w-full p-4 bg-gray-100 rounded-md outline-none"
-            rows="4"
+      <Navbar />
+      <div className="container mx-auto p-6">
+        {/* Post Details */}
+        <div className="post-details bg-white shadow-lg rounded-lg p-6 mb-8">
+          <img
+            src={post.photo}
+            alt="Post"
+            className="w-full h-96 object-cover rounded-lg mb-6"
           />
-          <button
-            type="submit"
-            className="mt-2 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          >
-            Post Comment
-          </button>
-        </form>
+          <h1 className="text-4xl font-extrabold text-gray-900 mb-4">{post.title}</h1>
+          <div className="text-gray-600 mb-4">
+            By <span className="font-semibold">{post.author}</span> | Categories:{" "}
+            {post.categories.join(", ")}
+          </div>
+          <p className="text-lg text-gray-800 mb-6">{post.desc}</p>
+
+          {/* Like and Comment Buttons */}
+          <div className="flex items-center space-x-6">
+            <button
+              className="flex items-center text-gray-600 hover:text-red-500 transition-colors"
+              onClick={toggleLike}
+            >
+              {liked ? (
+                <BsHeartFill className="mr-2 text-red-500" />
+              ) : (
+                <BsHeart className="mr-2" />
+              )}
+              {liked ? "Liked" : "Like"}
+            </button>
+            <span className="flex items-center text-gray-900">
+              <AiOutlineComment className="mr-2" />
+              {comments.length} Comments
+            </span>
+          </div>
+        </div>
+        
+
+        {/* Comments Section */}
+<div className="comments">
+  <h2 className="text-2xl font-bold mb-4">Comments</h2>
+  {/* Add Comment */}
+<form
+  onSubmit={handleCommentSubmit}
+  className="flex items-center bg-gray-50 rounded-full shadow-md w-full max-w-3xl mx-auto p-2 space-x-4"
+>
+  {/* Textarea for comment */}
+  <textarea
+    value={newComment}
+    onChange={(e) => setNewComment(e.target.value)}
+    placeholder="Write a comment..."
+    className="w-full p-3 bg-gray-100 text-gray-700 rounded-full border border-gray-300 outline-none resize-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+    rows="1" // Adjust height as needed, keeping it thin and short
+  />
+
+  {/* Post Button */}
+  <button
+    type="submit"
+    className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+  >
+    Post
+  </button>
+</form>
+  {/* Comments List */}
+  {comments.length > 0 ? (
+    comments.map((comment) => (
+      <div key={comment._id} className="flex mb-2 space-x-2 items-start  bg-gray-50 rounded-md border border-black">
+        {/* Comment's Author */}
+        <div className="flex items-center space-x-3 w-32 mt-3">
+          <FaUserAlt
+            size={20}
+            style={{ color: getRandomColor() }} // Random color for the user icon
+            className="ml-2"
+          />
+          <div className="font-semibold text-gray-800">
+            {comment.author}:
+          </div>
+        </div>
+        {/* Comment's Text */}
+        <div className="flex-1 p-3  text-left">
+          {comment.comment}
+        </div>
       </div>
-    </div>
-    <Footer/>
+    ))
+  ) : (
+    <p className="text-gray-500">No comments yet. Be the first to comment!</p>
+  )}
+ 
+
+</div>
+
+      </div>
+      <Footer />
     </div>
   );
 };
+
 export default PostDetails;
