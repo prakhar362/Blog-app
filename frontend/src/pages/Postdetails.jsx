@@ -6,6 +6,7 @@ import { URL } from "../url"; // Backend base URL
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import { FaUserAlt } from 'react-icons/fa'; // Import the user icon
+import { FaUserCircle } from "react-icons/fa";
 
 const PostDetails = () => {
   const { id } = useParams(); // Post ID from the route
@@ -107,18 +108,53 @@ const PostDetails = () => {
       <Navbar />
       <div className="container mx-auto p-6">
         {/* Post Details */}
-        <div className="post-details bg-white shadow-lg rounded-lg p-6 mb-8">
+        <div className="post-details bg-white shadow-md rounded-lg p-6 mb-8">
+          
+          <h1 className="text-6xl font-extrabold text-gray-900 mb-4">{post.title}</h1>
+
+          <div className="text-gray-900 mb-4 flex text-center justify-self-center">
+              <FaUserCircle
+                className="text-gray-700 text-3xl cursor-pointer relative mr-2"
+                 aria-label="Profile options"/>
+              By <span className="font-semibold text-md text-gray-900 ml-1">{post.username}</span> <br />{" "}
+          </div>
+
+          <div className="flex  space-x-2 mt-5 mb-3 justify-center">
+          <h3 className="mt-1 font-bold text-lg">Categories:  </h3>
+    {post.categories.map((category, index) => (
+      <div
+        key={index}
+        className="bg-black text-white px-4 py-2 rounded-xl border text-sm"
+      >{category}
+      </div>
+    ))}
+  </div>
+
           <img
             src={post.photo}
             alt="Post"
-            className="w-full h-96 object-cover rounded-lg mb-6"
+            className="w-3/4 h-64 object-fill rounded-sm mb-6 mx-12 sm:mx-36 sm:w-3/4 sm:h-96"
           />
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-4">{post.title}</h1>
-          <div className="text-gray-600 mb-4">
-            By <span className="font-semibold">{post.author}</span> | Categories:{" "}
-            {post.categories.join(", ")}
+          {/* Like and Comment Buttons */}
+          <div className="flex items-center justify-center space-x-6">
+            <button
+              className="flex items-center text-gray-600 hover:text-red-500 transition-colors"
+              onClick={toggleLike}
+            >
+              {liked ? (
+                <BsHeartFill className="mr-2 text-red-500" />
+              ) : (
+                <BsHeart className="mr-2" />
+              )}
+              {liked ? "Liked" : "Like"}
+            </button>
+            <span className="flex items-center text-gray-900">
+              <AiOutlineComment className="mr-2" />
+              {comments.length} Comments
+            </span>
           </div>
-          <p className="text-lg text-gray-800 mb-6">{post.desc}</p>
+          <hr />
+          <p className="text-lg text-gray-800 mb-6 mt-6">{post.desc}</p>
 
           {/* Like and Comment Buttons */}
           <div className="flex items-center space-x-6">
