@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FcLike } from "react-icons/fc";
 import { FaRegComment } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const HomePost = ({ selectedCategories }) => {
   const [blogs, setBlogs] = useState([]);
@@ -40,9 +41,10 @@ const HomePost = ({ selectedCategories }) => {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-6 p-2">
       {filteredBlogs.length > 0 ? (
         filteredBlogs.map((blog) => (
-          <div
+          <Link
             key={blog._id}
-            className="p-4 border-b-2 border-black rounded-sm shadow-none bg-white hover:shadow-md transition-shadow duration-300 w-full flex flex-col md:flex-row md:h-44"
+            to={`/Post/post/${blog._id}`}
+            className="block bg-white shadow-none rounded-sm overflow-hidden hover:shadow-md transition-shadow duration-300 w-full flex flex-col md:flex-row md:h-44 p-4 border-b-2 border-black"
           >
             {/* Blog Content */}
             <div className="flex flex-col justify-between text-left w-full md:w-2/3">
@@ -55,7 +57,7 @@ const HomePost = ({ selectedCategories }) => {
               {/* Blog Description */}
               <p className="text-sm text-gray-700 mt-2">
                 {blog.desc.length > 120
-                  ? `${blog.desc.substring(0, 120)}...Read more`
+                  ? `${blog.desc.substring(0, 120)}...`
                   : blog.desc}
               </p>
   
@@ -77,16 +79,18 @@ const HomePost = ({ selectedCategories }) => {
               <img
                 src={blog.photo}
                 alt={blog.title}
-                className="w-full h-40 object-fill rounded-t-lg mt-3 md:mt-0 md:w-1/4 md:h-36 md:object-fill md:rounded-lg md:ml-4"
+                className="w-full h-40 object-fill rounded-t-sm mt-3 md:mt-0 md:w-1/4 md:h-36 md:object-fill md:rounded-sm md:ml-4"
               />
             )}
-          </div>
+          </Link>
         ))
       ) : (
-        <p className="text-center text-gray-500">No blogs found for the selected categories.</p>
+        <p className="text-center text-gray-500">
+          No blogs found for the selected categories.
+        </p>
       )}
     </div>
-  );
+  );  
   
 };
 
