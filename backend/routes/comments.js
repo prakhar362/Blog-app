@@ -7,7 +7,7 @@ const Comment=require('../models/Comment')
 const verifyToken = require('../verifyToken')
 
 //CREATE
-router.post("/create",verifyToken,async (req,res)=>{
+router.post("/create",async (req,res)=>{
     try{
         const newComment=new Comment(req.body)
         const savedComment=await newComment.save()

@@ -53,11 +53,15 @@ const Login = () => {
       const data = await response.json();
       console.log("Login successful:", data);
 
-      // Set the user data in the context after successful login
-      setUser(data);  // Now this should work
+// Save user credentials to local storage
+localStorage.setItem("userCredentials", JSON.stringify(data));
 
-      // Redirect to home page
-      navigate("/home");
+// Set the user data in the context after successful login
+setUser(data);
+
+// Redirect to the home page
+navigate("/home");
+
     } catch (err) {
       console.error("Unexpected error during login:", err);
       setError(true);

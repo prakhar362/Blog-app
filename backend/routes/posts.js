@@ -54,6 +54,7 @@ router.delete("/:id",verifyToken,async (req,res)=>{
 router.get("/:id",async (req,res)=>{
     try{
         const post=await Post.findById(req.params.id)
+        console.log(post);  // Check if 'image' field exists and contains data
         res.status(200).json(post)
     }
     catch(err){
