@@ -132,7 +132,7 @@ const Navbar = () => {
             </li>
             <li>
               <Link
-                to="/myblogs"
+                to={`/myblogs/${user._id}` }
                 onClick={toggleMobileMenu}
                 className="flex items-center"
               >
@@ -218,7 +218,7 @@ const Navbar = () => {
                 </li>
                 <li>
                   <Link
-                    to="/myblogs"
+                    to={`/myblogs/${user._id}`}
                     className="flex px-4 py-2 hover:bg-gray-100"
                   >
                     <LiaBlogSolid className="w-5 h-5 mr-2" />
