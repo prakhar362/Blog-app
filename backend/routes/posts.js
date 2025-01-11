@@ -6,20 +6,19 @@ const Post=require('../models/Post')
 const Comment=require('../models/Comment')
 const verifyToken = require('../verifyToken')
 
-//CREATE
-router.post("/create",async (req,res)=>{
-    try{
-        const newPost=new Post(req.body)
-        console.log(req.body)
-        const savedPost=await newPost.save()
-        res.status(200).json(savedPost)
+router.post("/create", verifyToken, async (req, res) => {
+    console.log("Request Body:", req.body); // Log the incoming request
+    console.log("User Info:", req.user); // Log decoded token data
+    try {
+      const newPost = new Post(req.body);
+      const savedPost = await newPost.save();
+      res.status(200).json(savedPost);
+    } catch (err) {
+      console.error("Error creating post:", err); // Log error details
+      res.status(500).json({ error: err.message });
     }
-    catch(err){
-        
-        res.status(500).json(err)
-    }
-     
-})
+  });
+  
 
 //UPDATE
 router.put("/:id",verifyToken,async (req,res)=>{

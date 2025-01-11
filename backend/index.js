@@ -29,7 +29,8 @@ const corsOptions ={
 
 //middlewares
 dotenv.config()
-app.use(express.json())
+// Middleware to parse JSON
+app.use(express.json());
 app.use("/images",express.static(path.join(__dirname,"/images")))
 console.log(cors())
 app.use(cookieParser())

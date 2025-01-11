@@ -55,6 +55,9 @@ const Login = () => {
 
 // Save user credentials to local storage
 localStorage.setItem("userCredentials", JSON.stringify(data));
+// Store the token in local storage
+localStorage.setItem("token", data.token);
+
 
 // Set the user data in the context after successful login
 setUser(data);

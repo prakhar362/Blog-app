@@ -24,6 +24,7 @@ const BlogPostCreator = () => {
        console.log("User Cred coming Create blog: ",parsedUserData)
        console.log("User Token: ",parsedUserData.token)
        setUserData(parsedUserData); // Store user data in state
+       console.log("User data Token: ",userData.token);
      }
    }, [setUserData]);
   // Transform categories for react-select
@@ -48,22 +49,21 @@ const BlogPostCreator = () => {
     }
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!userData.username || !userData._id) {
-      alert("User is not logged in. Please log in to create a blog post.");
+  
+    if (!userData.username || !userData._id || !userData.token) {
+      alert("User is not logged in or token is missing. Please log in to create a blog post.");
       return;
     }
-
+  
     // Upload photo first
     const uploadedPhoto = await uploadImage();
     if (!uploadedPhoto) {
       alert("Failed to upload image.");
       return;
     }
-
+  
     const blogData = {
       title,
       desc,
@@ -72,31 +72,40 @@ const BlogPostCreator = () => {
       userId: userData._id,
       categories: selectedCategories.map((cat) => cat.value), // Only category IDs
       likes: 0, // Add likes
-      comments: [], // Add comments as an array of strings or objects
+      comments: [], // Initialize comments as an empty array
     };
-
+  
     try {
-      //const res = await axios.post(`${URL}/api/posts/create`, blogData);
-      const res = await fetch(`${URL}/api/posts/create`, { // Add the missing slash here
-        method: "POST", // Specify the HTTP method
+      const res = await fetch(`${URL}/api/posts/create`, {
+        method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json", // Set the content type to JSON
           "Authorization": `Bearer ${userData.token}`, // Include the authentication token
         },
-        body: JSON.stringify(blogData), // Convert the blogData to a JSON string for the request body
+        body: JSON.stringify(blogData),
       });
-      
+  
+      if (!res.ok) {
+        const error = await res.json(); // Parse error response
+        throw new Error(error.message || "Failed to create blog post.");
+      }
+  
+      const data = await res.json(); // Parse success response
       alert("Blog created successfully!");
-      console.log(res.data); // Saved blog post
+      console.log("Saved blog post:", data);
+  
       // Reset form
       setTitle("");
       setDesc("");
       setPhoto(null);
       setSelectedCategories([]);
     } catch (err) {
-      console.error("Failed to create blog:", err);
+      console.error("Failed to create blog:", err.message);
+      alert(`Failed to create blog: ${err.message}`);
     }
   };
+
 
   return (
     <div>
