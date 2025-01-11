@@ -38,22 +38,33 @@ app.use("/api/users",userRoute)
 app.use("/api/posts",postRoute)
 app.use("/api/comments",commentRoute)
 
-//image upload
-const storage=multer.diskStorage({
-    destination:(req,file,fn)=>{
-        fn(null,"images")
+const storage = multer.diskStorage({
+    destination: (req, file, fn) => {
+        // Set the destination folder for file uploads
+        fn(null, "images"); // Make sure the "images" folder exists
     },
-    filename:(req,file,fn)=>{
-        fn(null,req.body.img)
-        // fn(null,"image1.jpg")
-    }
-})
+    filename: (req, file, fn) => {
+        // Generate a unique filename
+        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        fn(null, uniqueSuffix + path.extname(file.originalname)); // Add the original file extension
+    },
+});
 
-const upload=multer({storage:storage})
-app.post("/api/upload",upload.single("file"),(req,res)=>{
-    // console.log(req.body)
-    res.status(200).json("Image has been uploaded successfully!")
-})
+const upload = multer({ storage: storage });
+
+app.post("/api/upload", upload.single("file"), (req, res) => {
+    try {
+        console.log("Uploaded file info:", req.file);
+        res.status(200).json({
+            message: "Image has been uploaded successfully!",
+            filePath: `/images/${req.file.filename}`, // Return the file path
+        });
+    } catch (error) {
+        console.error("Error uploading image:", error);
+        res.status(500).json({ error: "Failed to upload image" });
+    }
+});
+
 
 
 const port=process.env.PORT;

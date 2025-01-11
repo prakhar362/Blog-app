@@ -34,7 +34,7 @@ function Home() {
       <div className="home-container flex">
         {/* Left-hand side: Categories (hidden on mobile) */}
         <aside
-          className={`w-1/3 md:w-1/6 p-4 bg-gray-50 h-screen border-r-2 md:block ${
+          className={`w-1/3 md:w-1/5 p-4 bg-gray-50 h-screen border-r-2 md:block ${
             isSidebarOpen ? "block" : "hidden"
           } fixed md:static z-50`}
         >
