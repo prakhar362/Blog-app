@@ -2,6 +2,8 @@ import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";  // Import UserContext
 import { URL } from "../url"; // Make sure the path is correct
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for styling
 
 const Login = () => {
   const navigate = useNavigate();
@@ -58,12 +60,25 @@ localStorage.setItem("userCredentials", JSON.stringify(data));
 // Store the token in local storage
 localStorage.setItem("token", data.token);
 
-
+// Show success toast notification
+toast.success('Login Successful! ✅', {
+  position: "top-right",
+  autoClose: 3000,
+  hideProgressBar: false,
+  closeOnClick: false,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: "dark",
+});
 // Set the user data in the context after successful login
 setUser(data);
-
+setTimeout(3000)
 // Redirect to the home page
-navigate("/home");
+// Redirect to the home page after a 3-second delay
+      setTimeout(() => {
+        navigate("/home"); // Use navigate to redirect to home
+      }, 3000); // 3-second delay for toast to finish
 
     } catch (err) {
       console.error("Unexpected error during login:", err);
@@ -126,6 +141,7 @@ navigate("/home");
             >
               Sign In
             </button>
+            <ToastContainer />
             {error && (
               <p className="text-red-500 text-center">
                 Invalid credentials, please try again.
