@@ -71,9 +71,20 @@ const MyBlogs = () => {
             <div key={post._id} className="my-8 p-4 border border-gray-300 rounded-lg">
               <h2 className="text-xl font-bold">{post.title}</h2>
               <p className="text-gray-700">{post.content}</p>
-              <div className="mt-2 flex justify-between">
+
+              {/* Display Likes */}
+              <div className="mt-2">
+                <span className="text-gray-600">Likes: {post.likes.length}</span>
+              </div>
+
+              {/* Display Comments */}
+              <div className="mt-2">
+                <span className="text-gray-600">Comments: {post.comments.length}</span>
+              </div>
+
+              <div className="mt-4 flex justify-between">
                 <Link
-                  to={userData ? `/posts/post/${post._id}` : "/login"}
+                  to={userData ? `/Post/post/${post._id}` : "/login"}
                   className="text-blue-500"
                 >
                   Read more
