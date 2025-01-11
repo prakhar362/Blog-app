@@ -90,8 +90,53 @@ const PostDetails = () => {
   };
 
   // Toggle like
-  const toggleLike = () => {
+  const toggleLike = async () => {
     setLiked((prevLiked) => !prevLiked);
+
+    try {
+      if (!liked) {
+        // Add post to library
+        const response = await fetch(`${URL}/api/library/add`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: userData._id,
+            username: userData.username,
+            email:userData.email,
+            postId: id,
+          }),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          console.log("Post added to library!");
+        } else {
+          console.error(result.message);
+          setLiked(false); // Revert UI change if failed
+        }
+      } else {
+        // Remove post from library
+        const response = await fetch(`${URL}/api/library/remove`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: userData._id,
+            postId: id,
+          }),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          console.log("Post removed from library!");
+        } else {
+          console.error(result.message);
+          setLiked(true); // Revert UI change if failed
+        }
+      }
+    } catch (error) {
+      console.error("Error toggling like:", error);
+      setLiked(!liked); // Revert UI change if an error occurs
+    }
   };
 
   const getRandomColor = () => {

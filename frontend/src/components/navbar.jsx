@@ -122,7 +122,7 @@ const Navbar = () => {
             </li>
             <li>
               <Link
-                to="/library"
+                to={`/library/${user._id}`}
                 onClick={toggleMobileMenu}
                 className="flex items-center"
               >

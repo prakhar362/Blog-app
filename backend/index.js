@@ -12,6 +12,7 @@ const authRoute=require('./routes/auth')
 const userRoute=require('./routes/user')
 const postRoute=require('./routes/posts')
 const commentRoute=require('./routes/comments')
+const libraryRoute=require('./routes/library');
 
 const app = express();
 
@@ -38,6 +39,8 @@ app.use("/api/auth",authRoute)
 app.use("/api/users",userRoute)
 app.use("/api/posts",postRoute)
 app.use("/api/comments",commentRoute)
+app.use("/api/library",libraryRoute)
+
 
 const storage = multer.diskStorage({
     destination: (req, file, fn) => {

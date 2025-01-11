@@ -9,6 +9,7 @@ import EditPost from './pages/EditPost';
 import MyBlogs from './pages/Myblogs';
 import Profile from './pages/Profile';
 import Landing from './pages/LandingPage';
+import Library from './pages/Library';
 import ProtectRoute from "./components/ProtectRoute"; // Import the ProtectRoute component
 import { UserContextProvider } from './context/UserContext';  // Import UserContextProvider
 
@@ -36,6 +37,7 @@ function App() {
         <Route exact path="/edit/:id" element={<EditPost />} />
         <Route exact path="/myblogs/:id" element={<MyBlogs />} />
         <Route exact path="/profile/:id" element={<Profile />} />
+        <Route exact path="/library/:id" element={<Library />} />
       </Routes>
       </UserContextProvider>
     </>
