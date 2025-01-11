@@ -16,17 +16,14 @@ const BlogPostCreator = () => {
   const [userData, setUserData] = useState(null); // State to store user data
 
   // Fetch user info from localStorage
- // Fetch user info from localStorage
-   useEffect(() => {
-     const userDataString = localStorage.getItem("userCredentials");
-     if (userDataString) {
-       const parsedUserData = JSON.parse(userDataString);
-       console.log("User Cred coming Create blog: ",parsedUserData)
-       console.log("User Token: ",parsedUserData.token)
-       setUserData(parsedUserData); // Store user data in state
-       console.log("User data Token: ",userData.token);
-     }
-   }, [setUserData]);
+  useEffect(() => {
+    const userDataString = localStorage.getItem("userCredentials");
+    if (userDataString) {
+      const parsedUserData = JSON.parse(userDataString);
+      setUserData(parsedUserData); // Store user data in state
+    }
+  }, [setUserData]);
+
   // Transform categories for react-select
   const categoryOptions = categories.map((cat) => ({
     value: cat.id,
@@ -51,50 +48,49 @@ const BlogPostCreator = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!userData.username || !userData._id || !userData.token) {
       alert("User is not logged in or token is missing. Please log in to create a blog post.");
       return;
     }
-  
+
     // Upload photo first
     const uploadedPhoto = await uploadImage();
     if (!uploadedPhoto) {
       alert("Failed to upload image.");
       return;
     }
-  
+
     const blogData = {
       title,
       desc,
-      photo: uploadedPhoto,
+      photo: uploadedPhoto.filePath,
       username: userData.username,
       userId: userData._id,
-      categories: selectedCategories.map((cat) => cat.value), // Only category IDs
+      categories: selectedCategories.map((cat) => cat.label), // Only category IDs
       likes: 0, // Add likes
       comments: [], // Initialize comments as an empty array
     };
-  
+
     try {
       const res = await fetch(`${URL}/api/posts/create`, {
         method: "POST",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json", // Set the content type to JSON
           "Authorization": `Bearer ${userData.token}`, // Include the authentication token
         },
         body: JSON.stringify(blogData),
       });
-  
+
       if (!res.ok) {
         const error = await res.json(); // Parse error response
         throw new Error(error.message || "Failed to create blog post.");
       }
-  
+
       const data = await res.json(); // Parse success response
       alert("Blog created successfully!");
       console.log("Saved blog post:", data);
-  
+
       // Reset form
       setTitle("");
       setDesc("");
@@ -106,86 +102,87 @@ const BlogPostCreator = () => {
     }
   };
 
-
   return (
     <div>
-      <Navbar/>
-    
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-2xl font-semibold text-center mb-6">Create Blog Post</h2>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Title */}
-        <div>
-          <label htmlFor="title" className="block font-medium mb-2">
-            Blog Title
-          </label>
-          <input
-            type="text"
-            id="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="p-2 border border-gray-300 rounded-md w-full"
-            placeholder="Enter blog title"
-            required
-          />
-        </div>
+      <Navbar />
 
-        {/* Thumbnail */}
-        <div>
-          <label htmlFor="photo" className="block font-medium mb-2">
-            Thumbnail Image
-          </label>
-          <input
-            type="file"
-            id="photo"
-            accept="image/*"
-            onChange={(e) => setPhoto(e.target.files[0])}
-            className="p-2 border border-gray-300 rounded-md w-full"
-            required
-          />
-        </div>
+      <div className="max-w-4xl mx-auto p-8 bg-white shadow-xl rounded-lg mt-10">
+        <h2 className="text-3xl font-semibold text-center mb-6 text-slate-950">Create Your Blog Post</h2>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Title */}
+          <div>
+            <label htmlFor="title" className="block text-lg font-medium text-gray-800 mb-2">
+              Blog Title
+            </label>
+            <input
+              type="text"
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter blog title"
+              required
+            />
+          </div>
 
-        {/* Categories */}
-        <div>
-          <label htmlFor="categories" className="block font-medium mb-2">
-            Select Categories
-          </label>
-          <Select
-            id="categories"
-            options={categoryOptions}
-            value={selectedCategories}
-            onChange={setSelectedCategories}
-            isMulti
-            placeholder="Select categories"
-          />
-        </div>
+          {/* Thumbnail */}
+          <div>
+            <label htmlFor="photo" className="block text-lg font-medium text-gray-800 mb-2">
+              Thumbnail Image
+            </label>
+            <input
+              type="file"
+              id="photo"
+              accept="image/*"
+              onChange={(e) => setPhoto(e.target.files[0])}
+              className="w-full p-4 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
 
-        {/* Blog Content */}
-        <div>
-          <label htmlFor="desc" className="block font-medium mb-2">
-            Blog Content
-          </label>
-          <ReactQuill
-            theme="snow"
-            value={desc}
-            onChange={setDesc}
-            className="h-64"
-            placeholder="Write your blog content here..."
-          />
-        </div>
+          {/* Categories */}
+          <div>
+            <label htmlFor="categories" className="block text-lg font-medium text-gray-800 mb-2">
+              Select Categories
+            </label>
+            <Select
+              id="categories"
+              options={categoryOptions}
+              value={selectedCategories}
+              onChange={setSelectedCategories}
+              isMulti
+              placeholder="Select categories"
+              className="border-2 border-gray-300 rounded-md"
+            />
+          </div>
 
-        {/* Submit Button */}
-        <div className="flex justify-center">
-          <button
-            type="submit"
-            className="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-          >
-            Publish Blog Post
-          </button>
-        </div>
-      </form>
-    </div>
-    <Footer/>
+          {/* Blog Content */}
+          <div>
+            <label htmlFor="desc" className="block text-lg font-medium text-gray-800 mb-2">
+              Blog Content
+            </label>
+            <ReactQuill
+              theme="snow"
+              value={desc}
+              onChange={setDesc}
+              className="h-72 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Write your blog content here..."
+            />
+          </div>
+
+          {/* Submit Button */}
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="px-6 py-3 mt-6 bg-gray-500 text-white font-semibold rounded-lg hover:bg-black focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+            >
+              Publish Blog Post
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <Footer />
     </div>
   );
 };

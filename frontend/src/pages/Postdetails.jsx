@@ -130,11 +130,11 @@ const PostDetails = () => {
     ))}
   </div>
 
-          <img
-            src={post.photo}
-            alt="Post"
-            className="w-3/4 h-64 object-fill rounded-sm mb-6 mx-12 sm:mx-36 sm:w-3/4 sm:h-96"
-          />
+  <img
+  src={post.photo && (post.photo.startsWith("http") ? post.photo : `${URL}${post.photo}`)}
+  alt="Post"
+  className="w-3/4 h-64 object-fill rounded-sm mb-6 mx-12 sm:mx-36 sm:w-3/4 sm:h-96"
+/>
           {/* Like and Comment Buttons */}
           <div className="flex items-center justify-center space-x-6">
             <button
@@ -154,7 +154,7 @@ const PostDetails = () => {
             </span>
           </div>
           <hr />
-          <p className="text-lg text-gray-800 mb-6 mt-6">{post.desc}</p>
+          <div className="text-lg text-gray-800 mb-6 mt-6" dangerouslySetInnerHTML={{ __html: post.desc }} />
 
           {/* Like and Comment Buttons */}
           <div className="flex items-center space-x-6">

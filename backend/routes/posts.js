@@ -6,13 +6,14 @@ const Post=require('../models/Post')
 const Comment=require('../models/Comment')
 const verifyToken = require('../verifyToken')
 
-router.post("/create", verifyToken, async (req, res) => {
-    console.log("Request Body:", req.body); // Log the incoming request
-    console.log("User Info:", req.user); // Log decoded token data
+router.post("/create", async (req, res) => {
+   
     try {
       const newPost = new Post(req.body);
       const savedPost = await newPost.save();
       res.status(200).json(savedPost);
+      console.log("Request Body:", req.body); // Log the incoming request
+      console.log("User Info:", req.user); // Log decoded token data
     } catch (err) {
       console.error("Error creating post:", err); // Log error details
       res.status(500).json({ error: err.message });
@@ -52,7 +53,7 @@ router.delete("/:id",verifyToken,async (req,res)=>{
 router.get("/:id",async (req,res)=>{
     try{
         const post=await Post.findById(req.params.id)
-        console.log(post);  // Check if 'image' field exists and contains data
+        //console.log(post);  // Check if 'image' field exists and contains data
         res.status(200).json(post)
     }
     catch(err){

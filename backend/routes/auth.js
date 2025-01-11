@@ -57,8 +57,6 @@ router.post("/login",async (req,res)=>{
   })
   .status(200)
   .json({ ...info, token }); // Include token in the response body
-          
-        
 
     }
     catch(err){

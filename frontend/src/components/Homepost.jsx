@@ -3,6 +3,8 @@ import axios from "axios";
 import { FcLike } from "react-icons/fc";
 import { FaRegComment } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { URL } from "../url";
+import DOMPurify from "dompurify";
 
 const HomePost = ({ selectedCategories }) => {
   const [blogs, setBlogs] = useState([]);
@@ -55,14 +57,20 @@ const HomePost = ({ selectedCategories }) => {
               </div>
   
               {/* Blog Description */}
-              <p className="text-sm text-gray-700 mt-2">
-                {blog.desc.length > 120
-                  ? `${blog.desc.substring(0, 120)}...`
-                  : blog.desc}
-              </p>
+<p className="text-sm text-gray-700 -mt-2">
+  <span
+    dangerouslySetInnerHTML={{
+      __html: DOMPurify.sanitize(
+        blog.desc.length > 120
+          ? `${blog.desc.substring(0, 120)}...`
+          : blog.desc
+      ),
+    }}
+  />
+</p>
   
               {/* Likes and Comments */}
-              <div className="flex items-center mt-4 space-x-4">
+              <div className="flex items-center mt-2 space-x-4">
                 <div className="flex items-center space-x-1">
                   <FcLike className="mr-1" />
                   <span className="text-sm font-bold">{blog.likes || 0}</span>
@@ -75,13 +83,15 @@ const HomePost = ({ selectedCategories }) => {
             </div>
   
             {/* Blog Thumbnail */}
-            {blog.photo && (
-              <img
-                src={blog.photo}
-                alt={blog.title}
-                className="w-full h-40 object-fill rounded-t-sm mt-3 md:mt-0 md:w-1/4 md:h-36 md:object-fill md:rounded-sm md:ml-4"
-              />
-            )}
+{blog.photo && (
+  <img
+    src={blog.photo.startsWith("http") ? blog.photo : `${URL}${blog.photo}`} // Check if photo starts with 'http'
+    alt={blog.title || "Blog Thumbnail"} // Provide fallback for alt text
+    className="w-full h-40 object-fill rounded-t-sm mt-3 md:mt-0 md:w-1/4 md:h-36 md:object-fill md:rounded-sm md:ml-4"
+  />
+)}
+
+
           </Link>
         ))
       ) : (
