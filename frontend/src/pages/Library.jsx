@@ -8,7 +8,7 @@ import Loader from "../components/Loader";
 
 const Library = () => {
   const navigate = useNavigate();
-  const [library, setLibrary] = useState([]);  // Ensure library is an array
+  const [library, setLibrary] = useState([]); // Ensure library is an array
   const [loader, setLoader] = useState(false);
   const [noResults, setNoResults] = useState(false);
   const [userData, setUserData] = useState(null);
@@ -28,8 +28,7 @@ const Library = () => {
     setLoader(true);
     try {
       const res = await axios.get(`${URL}/api/library/${userData._id}`);
-      console.log("Fetched library data:", res.data);  // Log the response
-      // Ensure the response is an array
+      console.log("Fetched library data:", res.data); // Log the response
       const fetchedLibrary = Array.isArray(res.data.library) ? res.data.library : [];
       setLibrary(fetchedLibrary);
 
@@ -66,38 +65,43 @@ const Library = () => {
   return (
     <div>
       <Navbar />
-      <div className="px-8 md:px-[200px] min-h-[80vh]">
+      <div className="px-8  md:px-[200px] min-h-[80vh] mt-5">
         {loader ? (
           <div className="h-[40vh] flex justify-center items-center">
             <Loader />
           </div>
         ) : !noResults ? (
           Array.isArray(library) && library.length > 0 ? (
-            library.map((item) => (
-              <div key={item._id} className="my-8 p-6 bg-white border border-gray-300 rounded-lg shadow-md">
-                <h2 className="text-2xl font-bold text-gray-800">Post Title: {item.postId.title}</h2>
-                <p className="text-gray-600">Added by: {item.username}</p>
-                <p className="text-gray-600">Email: {item.email}</p>
-                <p className="text-gray-500">
-                  Added On: {new Date(item.createdAt).toLocaleString()}
-                </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {library.map((item) => (
+                <div
+                  key={item._id}
+                  className="p-6 bg-white border border-gray-900 rounded-md shadow-lg transform transition-transform hover:scale-105"
+                >
+                  <h2 className="text-2xl font-semibold text-gray-800">{item.postId.title}</h2>
+                  <p className="text-gray-600 text-sm">Added by: {item.username}</p>
+                  <p className="text-gray-600 text-sm">Email: {item.email}</p>
+                  <p className="text-gray-500 text-sm">
+                    Added On: {new Date(item.createdAt).toLocaleString()}
+                  </p>
 
-                <div className="mt-6 flex justify-between items-center">
-                  <Link
-                    to={userData ? `/Post/post/${item.postId._id}` : "/login"}
-                    className="text-blue-500 hover:underline"
-                  >
-                    View Post
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(item._id)}
-                    className="text-red-500 hover:underline"
-                  >
-                    Remove from Library
-                  </button>
+                  <div className="mt-6 flex justify-between items-center">
+                    <Link
+                      to={userData ? `/Post/post/${item.postId._id}` : "/login"}
+                      className="text-blue-500 hover:underline transition duration-200"
+                    >
+                      View Post
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(item._id)}
+                      className="text-red-500 hover:underline transition duration-200"
+                    >
+                      Remove from Library
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))
+              ))}
+            </div>
           ) : (
             <h3 className="text-center font-bold mt-16 text-gray-600">No items in your library</h3>
           )

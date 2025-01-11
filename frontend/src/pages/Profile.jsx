@@ -55,7 +55,7 @@ const ProfilePage = () => {
 
   return (
     <div className="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 min-h-screen">
-      <Navbar className='bg-black' />
+      <Navbar />
       <div className="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-2xl mt-10">
         <h2 className="text-3xl font-semibold text-center text-gray-950 mb-6">Profile Page</h2>
         <div className="space-y-6">
