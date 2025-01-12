@@ -4,7 +4,7 @@ import Navbar from "../components/navbar";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { URL } from "../url";
-import Loader from "../components/Loader";
+import Loader from "../components/loader";
 
 const Library = () => {
   const navigate = useNavigate();
