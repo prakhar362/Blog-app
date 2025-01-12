@@ -17,14 +17,20 @@ const libraryRoute=require('./routes/library');
 const app = express();
 
 //app.use(cors())
+
+// CORS options
 const corsOptions = {
-    origin: 'https://inkspire-ps.vercel.app', // Allow requests from this domain
-    credentials: true,                       // Allow cookies and other credentials
-    optionSuccessStatus: 200,                // Success status code for preflight requests
+    origin: 'https://inkspire-ps.vercel.app', // Frontend URL
+    credentials: true, // Allow credentials (cookies)
+    methods: ['GET', 'POST', 'OPTIONS'], // Allow methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow headers
+    preflightContinue: false, // Don't pass the OPTIONS request to the next middleware
   };
   
-  // Apply CORS middleware globally with the options
+  // Apply CORS globally to all routes
   app.use(cors(corsOptions));
+  
+  // Ensure that the OPTIONS preflight request is handled
   app.options('*', cors(corsOptions)); // Handle preflight request for all routes
 
 
