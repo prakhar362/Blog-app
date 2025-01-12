@@ -16,14 +16,13 @@ const libraryRoute=require('./routes/library');
 
 const app = express();
 
-app.use(cors())
-const corsOptions ={
-    origin:'https://inkspire-ps.vercel.app', 
-    credentials:true,            //access-control-allow-credentials:true
-    optionSuccessStatus:200,
- }
+//app.use(cors())
+app.use(cors({
+    origin: 'https://inkspire-ps.vercel.app', // Replace with the front-end URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  }));
  
- app.use(cors(corsOptions)) // Use this after the variable declaration
 
 
 
