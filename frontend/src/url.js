@@ -1,3 +1,3 @@
 // src/url.js
-export const URL = "http://localhost:8000";
-export const IF = "http://localhost:8000/images/";
+export const URL = "https://blog-app-bay-psi.vercel.app";
+export const IF = "https://blog-app-bay-psi.vercel.app/images/";
