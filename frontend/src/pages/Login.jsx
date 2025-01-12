@@ -63,7 +63,7 @@ localStorage.setItem("token", data.token);
 // Show success toast notification
 toast.success('Login Successful! ✅', {
   position: "top-right",
-  autoClose: 3000,
+  autoClose: 2000,
   hideProgressBar: false,
   closeOnClick: false,
   pauseOnHover: true,
@@ -73,12 +73,12 @@ toast.success('Login Successful! ✅', {
 });
 // Set the user data in the context after successful login
 setUser(data);
-setTimeout(3000)
+setTimeout(2000)
 // Redirect to the home page
 // Redirect to the home page after a 3-second delay
       setTimeout(() => {
         navigate("/home"); // Use navigate to redirect to home
-      }, 3000); // 3-second delay for toast to finish
+      }, 2000); // 3-second delay for toast to finish
 
     } catch (err) {
       console.error("Unexpected error during login:", err);

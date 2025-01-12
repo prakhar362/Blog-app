@@ -72,8 +72,14 @@ const Navbar = () => {
   return (
     <header className="flex items-center justify-between w-full py-3 px-5 bg-white shadow-sm">
       {/* Title */}
-      <h1 className="text-lg md:text-xl font-bold">
-        <Link to="/home">Blogosphere</Link>
+      <h1 className="text-lg md:text-2xl font-bold">
+      <Link to="/home">
+  <img
+    src="https://static.wixstatic.com/media/4a303c_4f2c44400e614f1d89c5914070037254~mv2.png/v1/fit/w_2500,h_1330,al_c/4a303c_4f2c44400e614f1d89c5914070037254~mv2.png"
+    alt="Logo"
+    className="w-full h-7 sm:w-full sm:h-10 "
+  />
+</Link>
       </h1>
 
       {/* Hamburger Menu for Mobile */}

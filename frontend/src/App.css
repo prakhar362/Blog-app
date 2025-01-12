@@ -3,6 +3,11 @@
   padding: 0;
   text-align: center; /* Optional, depending on your design */
 }
+.bg-landing-bg {
+  background-image: url('https://github.com/Devansh-Sabharwal/BrainDock/blob/main/Frontend/src/assets/bg.png?raw=true');
+  background-size: cover;
+  background-position: center;
+}
 
 .logo {
   height: 6em;

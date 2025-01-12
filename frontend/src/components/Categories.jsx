@@ -15,7 +15,7 @@ const Categories = ({ selectedCategories, onCategoryChange }) => {
         onClick={toggleSidebar}
         className="block md:hidden bg-blue-500 text-white px-4 py-2 rounded mb-4"
       >
-        {isOpen ? "Close Filters" : "Open Filters"}
+        {isOpen ? "Close Filters" : "Open"}
       </button>
 
       {/* Sidebar */}

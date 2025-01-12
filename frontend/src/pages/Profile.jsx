@@ -4,6 +4,7 @@ import axios from "axios";
 import { URL } from "../url"; // Backend base URL
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
+import { FaFacebook, FaTwitter, FaInstagram, FaGithub, FaLinkedin } from "react-icons/fa"; // Importing icons
 
 const ProfilePage = () => {
   const { id } = useParams(); // Get the dynamic 'id' param from the URL
@@ -13,6 +14,13 @@ const ProfilePage = () => {
     username: "",
     email: "",
     bio: "",
+    socialLinks: {
+      facebook: "",
+      twitter: "",
+      instagram: "",
+      github: "",
+      linkedin: "",
+    },
   });
 
   useEffect(() => {
@@ -40,7 +48,15 @@ const ProfilePage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUpdatedUser({ ...updatedUser, [name]: value });
+    if (name.includes("socialLinks.")) {
+      const field = name.split(".")[1];
+      setUpdatedUser({
+        ...updatedUser,
+        socialLinks: { ...updatedUser.socialLinks, [field]: value },
+      });
+    } else {
+      setUpdatedUser({ ...updatedUser, [name]: value });
+    }
   };
 
   const handleSave = async () => {
@@ -53,8 +69,16 @@ const ProfilePage = () => {
     }
   };
 
+  const iconMap = {
+    facebook: <FaFacebook className="text-blue-600 w-6 h-6" />,
+    twitter: <FaTwitter className="text-blue-400 w-6 h-6" />,
+    instagram: <FaInstagram className="text-pink-500 w-6 h-6" />,
+    github: <FaGithub className="text-gray-800 w-6 h-6" />,
+    linkedin: <FaLinkedin className="text-blue-700 w-6 h-6" />,
+  };
+
   return (
-    <div className="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 min-h-screen">
+    <div className="bg-gray-300">
       <Navbar />
       <div className="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-2xl mt-10">
         <h2 className="text-3xl font-semibold text-center text-gray-950 mb-6">Profile Page</h2>
@@ -104,6 +128,38 @@ const ProfilePage = () => {
                 className="p-3 border border-gray-300 rounded-md w-full h-32 focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             )}
+          </div>
+
+          {/* Social Media Links */}
+          <div className="space-y-4">
+            <strong className="text-gray-900 text-lg">Social Links:</strong>
+            {["facebook", "twitter", "instagram", "github", "linkedin"].map((platform) => (
+              <div key={platform} className="flex items-center space-x-4">
+                {iconMap[platform]}
+                <label className="w-20 capitalize text-gray-900 font-semibold" htmlFor={platform}>
+                  {platform}:
+                </label>
+                {!isEditing ? (
+                  <a
+                    href={user.socialLinks?.[platform]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-lg text-blue-600 hover:underline"
+                  >
+                    {user.socialLinks?.[platform] || "Not Provided"}
+                  </a>
+                ) : (
+                  <input
+                    type="url"
+                    name={`socialLinks.${platform}`}
+                    value={updatedUser.socialLinks?.[platform] || ""}
+                    onChange={handleChange}
+                    className="p-3 border border-gray-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    placeholder={`Enter ${platform} link`}
+                  />
+                )}
+              </div>
+            ))}
           </div>
 
           {/* Buttons */}

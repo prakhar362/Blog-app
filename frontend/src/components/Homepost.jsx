@@ -46,7 +46,7 @@ const HomePost = ({ selectedCategories }) => {
           <Link
             key={blog._id}
             to={`/Post/post/${blog._id}`}
-            className="block bg-white shadow-none rounded-sm overflow-hidden hover:shadow-md transition-shadow duration-300 w-full flex flex-col md:flex-row md:h-44 p-4 border-b-2 border-black"
+            className="block bg-white shadow-none rounded-sm overflow-hidden hover:shadow-md transition-shadow duration-300 w-full flex flex-col md:flex-row md:h-44 p-4 border-b-2 border-gray-300"
           >
             {/* Blog Content */}
             <div className="flex flex-col justify-between text-left w-full md:w-2/3">
@@ -87,7 +87,7 @@ const HomePost = ({ selectedCategories }) => {
   <img
     src={blog.photo.startsWith("http") ? blog.photo : `${URL}${blog.photo}`} // Check if photo starts with 'http'
     alt={blog.title || "Blog Thumbnail"} // Provide fallback for alt text
-    className="w-full h-40 object-fill rounded-t-sm mt-3 md:mt-0 md:w-1/4 md:h-36 md:object-fill md:rounded-sm md:ml-4"
+    className="w-full h-40 object-fill rounded-t-sm mt-3 md:mt-0 md:w-1/4 md:h-36 md:object-fill md:rounded-sm md:ml-2"
   />
 )}
 
