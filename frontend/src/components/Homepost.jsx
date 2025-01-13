@@ -14,7 +14,7 @@ const HomePost = ({ selectedCategories }) => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/posts");
+        const res = await axios.get("https://blog-app-okt3.onrender.com/api/posts");
         setBlogs(res.data); // Set fetched blogs
       } catch (err) {
         console.error("Error fetching blogs:", err);
