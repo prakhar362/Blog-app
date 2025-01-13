@@ -16,7 +16,18 @@ const libraryRoute=require('./routes/library');
 
 const app = express();
 
-app.use(cors())
+// CORS Configuration
+const corsOptions = {
+    origin: 'https://inkspire-ps.vercel.app', // Frontend domain
+    credentials: true, // Allow cookies and credentials
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+    optionSuccessStatus: 200, // Optional: For older browsers
+  };
+  
+  // Ensure OPTIONS preflight requests are handled
+  app.options('*', cors(corsOptions)); // Preflight for all routes
+ app.use(cors(corsOptions)) // Use this after the variable declaration
 
 //middlewares
 dotenv.config()
