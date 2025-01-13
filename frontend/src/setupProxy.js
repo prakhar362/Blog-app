@@ -8,7 +8,7 @@ module.exports = function (root) {
       changeOrigin: true,
       secure: false, // Set to false if your backend doesn't use HTTPS
       headers: {
-        'Access-Control-Allow-Origin': 'https://inkspire-ps.vercel.app', // Adjust the React app's origin
+        'Access-Control-Allow-Origin': 'https://inkspire-kkv4hjvls-prakhars-projects-7da98267.vercel.app', // Adjust the React app's origin
       },
     })
   );

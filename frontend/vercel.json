@@ -1,9 +1,9 @@
 {
-    "redirects": [
+    "version": 2,
+    "routes": [
       {
-        "source": "/:match*",
-        "destination": "/",
-        "permanent": false
+        "src": "/:match*",
+        "dest": "/index.html"
       }
     ]
   }
