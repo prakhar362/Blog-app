@@ -18,8 +18,6 @@ const app = express();
 
 app.use(cors())
 
-/
-
 //middlewares
 dotenv.config()
 // Middleware to parse JSON
