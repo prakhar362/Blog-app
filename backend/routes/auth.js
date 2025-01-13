@@ -78,15 +78,22 @@ router.get("/logout", async (req, res) => {
   
 
 //REFETCH USER
-router.get("/refetch", (req,res)=>{
-    const token=req.cookies.token
-    jwt.verify(token,process.env.SECRET,{},async (err,data)=>{
-        if(err){
-            return res.status(404).json(err)
-        }
-        res.status(200).json(data)
-    })
-})
+router.get("/refetch", (req, res) => {
+    // Extract token from Authorization header
+    const token = req.headers['authorization']?.split(' ')[1]; // Get token from "Bearer <token>"
+  
+    if (!token) {
+      return res.status(403).json({ message: "No token provided" });
+    }
+  
+    // Verify the token
+    jwt.verify(token, process.env.SECRET, {}, async (err, data) => {
+      if (err) {
+        return res.status(401).json({ message: "Invalid or expired token", error: err });
+      }
+      res.status(200).json(data); // Send back the user data
+    });
+  });
 
 
 
