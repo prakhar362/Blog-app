@@ -17,14 +17,17 @@ const libraryRoute=require('./routes/library');
 const app = express();
 
 // CORS Configuration
-app.use(
-    cors({
-      origin: process.env.CLIENT_URL,
-      
-      methods: ["GET", "POST", "DELETE", "PUT"],
-      allowedHeaders: ["Content-Type", "Authorization"],
-    })
-  );
+const corsOptions = {
+    origin: 'http://localhost:5173', // Frontend domain
+    credentials: true, // Allow cookies and credentials
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+    optionSuccessStatus: 200, // Optional: For older browsers
+  };
+  
+  // Ensure OPTIONS preflight requests are handled
+  app.options('*', cors(corsOptions)); // Preflight for all routes
+ app.use(cors(corsOptions)) // Use this after the variable declaration
 
 //middlewares
 dotenv.config()
