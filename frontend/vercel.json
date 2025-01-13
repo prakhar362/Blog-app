@@ -1,0 +1,10 @@
+{
+    "redirects": [
+      {
+        "source": "/:match*",
+        "destination": "/",
+        "permanent": false
+      }
+    ]
+  }
+  
