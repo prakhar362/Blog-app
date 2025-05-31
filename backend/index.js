@@ -18,7 +18,7 @@ const app = express();
 
 // CORS Configuration
 const corsOptions = {
-    origin: 'https://inkspire-ps.vercel.app', // Frontend domain
+    origin: 'https://inskpire.vercel.app', // Frontend domain
     credentials: true, // Allow cookies and credentials
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
