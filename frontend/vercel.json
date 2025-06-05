@@ -1,11 +1,5 @@
 {
     "version": 2,
-    "routes": [
-      {
-        "src": "/:match*",
-        "dest": "/index.html"
-      }
-    ],
     "rewrites": [
       { "source": "/(.*)", "destination": "/index.html" }
     ]
