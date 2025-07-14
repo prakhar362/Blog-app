@@ -32,6 +32,7 @@ const PostDetails = () => {
       try {
         const response = await fetch(`${URL}/api/posts/${id}`);
         const data = await response.json();
+        console.log("Data",data);
         setPost(data);
 
         // Fetch author details using the post's userId (assuming userId refers to the author)

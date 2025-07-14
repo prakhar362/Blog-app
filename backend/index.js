@@ -6,6 +6,8 @@ const path=require('path');
 const dotenv=require('dotenv');
 const cookieParser=require('cookie-parser')
 const multer=require('multer')
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 
 const authRoute=require('./routes/auth')
@@ -42,34 +44,34 @@ app.use("/api/posts",postRoute)
 app.use("/api/comments",commentRoute)
 app.use("/api/library",libraryRoute)
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-const storage = multer.diskStorage({
-    destination: (req, file, fn) => {
-        // Set the destination folder for file uploads
-        fn(null, "images"); // Make sure the "images" folder exists
-    },
-    filename: (req, file, fn) => {
-        // Generate a unique filename
-        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-        fn(null, uniqueSuffix + path.extname(file.originalname)); // Add the original file extension
-    },
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'blog_images', // Cloudinary folder name
+    allowed_formats: ['jpg', 'jpeg', 'png'],
+  },
 });
 
 const upload = multer({ storage: storage });
 
 app.post("/api/upload", upload.single("file"), (req, res) => {
-    try {
-        console.log("Uploaded file info:", req.file);
-        res.status(200).json({
-            message: "Image has been uploaded successfully!",
-            filePath: `/images/${req.file.filename}`, // Return the file path
-        });
-    } catch (error) {
-        console.error("Error uploading image:", error);
-        res.status(500).json({ error: "Failed to upload image" });
-    }
+  try {
+    // The uploaded file info is in req.file
+    res.status(200).json({
+      message: "Image has been uploaded successfully!",
+      filePath: req.file.path, // This is the Cloudinary URL
+    });
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    res.status(500).json({ error: "Failed to upload image" });
+  }
 });
-
 
 
 const port=process.env.PORT;
