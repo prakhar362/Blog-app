@@ -10,7 +10,7 @@ import { LiaBlogSolid } from "react-icons/lia";
 import { CgProfile } from "react-icons/cg";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 
-const Navbar = () => {
+const Navbar = ({ hideLogoOnMobile = false }) => {
   const [prompt, setPrompt] = useState("");
   const [dropdown, setDropdown] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false); // For mobile menu
@@ -71,52 +71,71 @@ const Navbar = () => {
 
   return (
     <header className="flex items-center justify-between w-full py-3 px-5 bg-white shadow-sm">
-      {/* Title - Hide on mobile */}
-      <h1 className="text-lg md:text-2xl font-bold hidden sm:block">
-      <Link to="/home">
-  <img
-    src="https://static.wixstatic.com/media/4a303c_4f2c44400e614f1d89c5914070037254~mv2.png/v1/fit/w_2500,h_1330,al_c/4a303c_4f2c44400e614f1d89c5914070037254~mv2.png"
-    alt="Logo"
-    className="w-full h-7 sm:w-full sm:h-10 "
-  />
-</Link>
+      {/* Title - Hide on mobile only if hideLogoOnMobile is true */}
+      <h1 className={`text-lg md:text-2xl font-bold ${hideLogoOnMobile ? 'hidden sm:block' : ''}`}>
+        <Link to="/home">
+          <img
+            src="https://static.wixstatic.com/media/4a303c_4f2c44400e614f1d89c5914070037254~mv2.png/v1/fit/w_2500,h_1330,al_c/4a303c_4f2c44400e614f1d89c5914070037254~mv2.png"
+            alt="Logo"
+            className="w-full h-7 sm:w-full sm:h-10 "
+          />
+        </Link>
       </h1>
 
       {/* Hamburger Menu for Mobile */}
       <div className="flex w-full items-center justify-between md:hidden">
-        {/* Search Bar */}
-        {path === "/home" && (
-          <div className="flex-1 flex items-center min-w-0">
-            <input
-              type="text"
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="w-full min-w-0 px-4 py-2 bg-gray-100 rounded-l-xl outline-none"
-              placeholder="Search a post"
-            />
-            <button
-              onClick={handleSearch}
-              className="px-3 py-3 bg-gray-100 text-gray-700 border-gray-200 rounded-r-lg"
-              aria-label="Search"
-            >
-              <BsSearch />
-            </button>
+        {/* Logo on the left (already handled by parent) */}
+        {path === "/home" ? (
+          <>
+            {/* Search Bar in the center on /home */}
+            <div className="flex-1 flex items-center min-w-0 mx-2">
+              <input
+                type="text"
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="w-full min-w-0 px-4 py-2 bg-gray-100 rounded-l-xl outline-none"
+                placeholder="Search a post"
+              />
+              <button
+                onClick={handleSearch}
+                className="px-3 py-3 bg-gray-100 text-gray-700 border-gray-200 rounded-r-lg"
+                aria-label="Search"
+              >
+                <BsSearch />
+              </button>
+            </div>
+            {/* Right side: Write button and Hamburger menu grouped */}
+            <div className="flex items-center space-x-2 flex-shrink-0">
+              <Link
+                to="/write"
+                className="text-gray-700 text-2xl flex-shrink-0"
+                aria-label="Write a blog"
+              >
+                <FiEdit className="mt-0" />
+              </Link>
+              <button onClick={toggleMobileMenu} className="text-2xl flex-shrink-0">
+                {mobileMenu ? <AiOutlineClose /> : <AiOutlineMenu />}
+              </button>
+            </div>
+          </>
+        ) : (
+          // No search bar: icons flush right
+          <div className="flex-1 flex items-center justify-end">
+            <div className="flex items-center space-x-2 flex-shrink-0">
+              <Link
+                to="/write"
+                className="text-gray-700 text-2xl flex-shrink-0"
+                aria-label="Write a blog"
+              >
+                <FiEdit className="mt-0" />
+              </Link>
+              <button onClick={toggleMobileMenu} className="text-2xl flex-shrink-0">
+                {mobileMenu ? <AiOutlineClose /> : <AiOutlineMenu />}
+              </button>
+            </div>
           </div>
         )}
-
-        {/* Write Icon */}
-        <Link
-          to="/write"
-          className="text-gray-700 text-2xl mx-2 flex-shrink-0"
-          aria-label="Write a blog"
-        >
-          <FiEdit className="mt-0" />
-        </Link>
-
-        <button onClick={toggleMobileMenu} className="text-2xl flex-shrink-0">
-          {mobileMenu ? <AiOutlineClose /> : <AiOutlineMenu />}
-        </button>
       </div>
 
       {/* Mobile Menu */}

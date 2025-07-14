@@ -163,8 +163,9 @@ const PostDetails = () => {
     <div>
     <Navbar />
     <div className="container mx-auto mt-10 p-3 gap-14">
-      {/* Left Side: Post Content */}
-      <div className="flex space-x-6">
+      {/* Responsive Flex Container */}
+      <div className="flex flex-col md:flex-row md:space-x-6">
+        {/* Left Side: Post Content */}
         <div className="post-details bg-white shadow-lg rounded-lg w-full p-6 mb-8 border border-black">
           <h1 className="text-4xl font-extrabold text-gray-900 mb-4">{post.title}</h1>
   
@@ -210,9 +211,9 @@ const PostDetails = () => {
             dangerouslySetInnerHTML={{ __html: post.desc }}
           />
         </div>
-  
-        {/* Right Side: Author Information */}
-        <div className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg rounded-lg w-2/5 h-3/4 p-6 border">
+
+        {/* Right Side: Author Information - Responsive */}
+        <div className="bg-white text-black shadow-lg rounded-lg w-full mt-6 md:mt-0 md:w-2/5 h-3/4 p-6 border border-gray-300">
           {author && (
             <>
               <h3 className="text-2xl font-semibold mb-2 ">Know About the Author</h3>

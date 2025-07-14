@@ -28,7 +28,7 @@ function Home() {
 
   return (
     <div>
-      <Navbar />
+        <Navbar hideLogoOnMobile />
       <hr />
 
       <div className="home-container flex">
