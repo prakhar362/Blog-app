@@ -47,6 +47,7 @@ const Login = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.log("MSG from Server: ",errorData);
         console.error("Error:", errorData.message || "Login failed");
         setError(true);
         return;

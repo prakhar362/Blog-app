@@ -71,8 +71,8 @@ const Navbar = () => {
 
   return (
     <header className="flex items-center justify-between w-full py-3 px-5 bg-white shadow-sm">
-      {/* Title */}
-      <h1 className="text-lg md:text-2xl font-bold">
+      {/* Title - Hide on mobile */}
+      <h1 className="text-lg md:text-2xl font-bold hidden sm:block">
       <Link to="/home">
   <img
     src="https://static.wixstatic.com/media/4a303c_4f2c44400e614f1d89c5914070037254~mv2.png/v1/fit/w_2500,h_1330,al_c/4a303c_4f2c44400e614f1d89c5914070037254~mv2.png"
@@ -83,16 +83,16 @@ const Navbar = () => {
       </h1>
 
       {/* Hamburger Menu for Mobile */}
-      <div className="flex md:hidden ">
+      <div className="flex w-full items-center justify-between md:hidden">
         {/* Search Bar */}
         {path === "/home" && (
-          <div className="items-center flex">
+          <div className="flex-1 flex items-center min-w-0">
             <input
               type="text"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="flex-1 px-4 py-2 bg-gray-100 rounded-l-xl outline-none"
+              className="w-full min-w-0 px-4 py-2 bg-gray-100 rounded-l-xl outline-none"
               placeholder="Search a post"
             />
             <button
@@ -100,7 +100,7 @@ const Navbar = () => {
               className="px-3 py-3 bg-gray-100 text-gray-700 border-gray-200 rounded-r-lg"
               aria-label="Search"
             >
-              <BsSearch className="" />
+              <BsSearch />
             </button>
           </div>
         )}
@@ -108,20 +108,20 @@ const Navbar = () => {
         {/* Write Icon */}
         <Link
           to="/write"
-          className="text-gray-700 text-2xl mr-3 ml-2"
+          className="text-gray-700 text-2xl mx-2 flex-shrink-0"
           aria-label="Write a blog"
         >
-          <FiEdit className="mt-2" />
+          <FiEdit className="mt-0" />
         </Link>
 
-        <button onClick={toggleMobileMenu} className="text-2xl">
+        <button onClick={toggleMobileMenu} className="text-2xl flex-shrink-0">
           {mobileMenu ? <AiOutlineClose /> : <AiOutlineMenu />}
         </button>
       </div>
 
       {/* Mobile Menu */}
       {mobileMenu && (
-        <div className="absolute top-16 left-0 w-full bg-white shadow-lg p-4 md:hidden">
+        <div className="absolute top-16 left-0 w-full bg-white shadow-lg p-4 md:hidden z-50">
           <ul className="space-y-4">
             {user && (
               <>
@@ -173,7 +173,7 @@ const Navbar = () => {
         </div>
       )}
 
-      {/* Search Bar */}
+      {/* Search Bar for desktop */}
       {path === "/home" && (
         <div className="hidden md:flex items-center flex-1 mx-6">
           <input
@@ -194,7 +194,7 @@ const Navbar = () => {
         </div>
       )}
 
-      {/* Icons */}
+      {/* Icons for desktop */}
       <div className="hidden md:flex items-center space-x-6">
         {/* Write Icon */}
         <Link
